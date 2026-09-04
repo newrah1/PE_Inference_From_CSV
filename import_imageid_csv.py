@@ -27,6 +27,10 @@ INDEX_POLL_SECONDS = 5
 INDEX_TIMEOUT_SECONDS = 180
 
 IMAGEID_CSV = r"D:\PythonProject\ImageID_CSV\imageids.csv"
+MODEL_ID = 15
+PROVIDER = "ispy"
+NMS = 0.45
+CONFIDENCE = 0.50
 
 def get_models(token):
     # Build the payload
@@ -41,14 +45,29 @@ def get_models(token):
     )
 
     body = response_body(response)
-    key_list = list(body.keys())
-    print(key_list)
+    # key_list = list(body.keys())
+    # print(key_list)
+    models = []
+
     for model in body.get("content", []):
-        print(f"ID: {model.get('id')}")
-        print(f"Name: {model.get('name')}")
-        print(f"Version: {model.get('version')}")
-        print(f"Description: {model.get('description')}")
-        print()
+        models.append({
+            "id": model.get("id"),
+            "name": model.get("name"),
+            "version": model.get("version"),
+            "description": model.get("description"),
+        })
+
+    df = pd.DataFrame(models)
+    df["id"] = pd.to_numeric(df["id"], errors="coerce")
+    df = df.sort_values(by="id")
+
+    print(df.to_string(
+        index=False,
+        justify="left",
+        formatters={
+            "description": lambda x: "" if pd.isna(x) else str(x)
+        }
+    ))
 
 
 def get_token(session):
@@ -187,11 +206,11 @@ def create_inference_job(session,token,cat_id,model_id,provider="ispy",nms=None,
 
 
 if __name__ == "__main__":
+    # Show models
     with requests.Session() as session:
         jwt = get_token(session)
-        get_models(session)
+        get_models(jwt)
 
-    """
     imageid_df = get_imageid_df(IMAGEID_CSV)
     for image_id in imageid_df['ImageID'].dropna():
         print(f"\nProcessing image -- {image_id}")
@@ -204,14 +223,14 @@ if __name__ == "__main__":
                 session=session,
                 token=jwt,
                 cat_id=image_id,
-                model_id="34",
-                provider="ispy",
-                # nms=0.45,
-                # confidence=0.50,
+                model_id=MODEL_ID,
+                provider=PROVIDER,
+                nms=NMS,
+                confidence=CONFIDENCE,
             )
 
             job_id = job.get("jobId") or job.get("id")
             if not job_id:
                 raise RuntimeError(f"Inference response did not include a job ID: {job}")
             print(json.dumps(f"Inference Request JOBID = {job_id}", indent=2))
-    """
+
