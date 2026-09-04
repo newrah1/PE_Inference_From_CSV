@@ -12,6 +12,7 @@ BASE_URL = "https://magneto.ds.maxar.com:3001"
 CORE_URL = f"{BASE_URL}/api/core"
 INFERENCE_URL = f"{BASE_URL}/api/inference"
 OASIS_URL = f"{BASE_URL}/api/oasis"
+MODEL_URL = f"{BASE_URL}/api/model"
 
 CLIENT_ID = "m2m-eb68d436-e3d1-4471-b650-5d988a755d90"
 CLIENT_SECRET = "1x2J5dTYa2LCY3BUP3wqo_-nGCH271WAc5mFnEcluvv5jYdbGna_rucRxEOUyyTf"
@@ -26,6 +27,28 @@ INDEX_POLL_SECONDS = 5
 INDEX_TIMEOUT_SECONDS = 180
 
 IMAGEID_CSV = r"D:\PythonProject\ImageID_CSV\imageids.csv"
+
+def get_models(token):
+    # Build the payload
+    payload = {}
+
+    # Try to create the inference job using the original CAT ID.
+    response = session.get(
+        f"{MODEL_URL}/model",
+        json=payload,
+        headers=auth_headers(token),
+        verify=VERIFY_TLS,
+    )
+
+    body = response_body(response)
+    key_list = list(body.keys())
+    print(key_list)
+    for model in body.get("content", []):
+        print(f"ID: {model.get('id')}")
+        print(f"Name: {model.get('name')}")
+        print(f"Version: {model.get('version')}")
+        print(f"Description: {model.get('description')}")
+        print()
 
 
 def get_token(session):
@@ -164,7 +187,11 @@ def create_inference_job(session,token,cat_id,model_id,provider="ispy",nms=None,
 
 
 if __name__ == "__main__":
+    with requests.Session() as session:
+        jwt = get_token(session)
+        get_models(session)
 
+    """
     imageid_df = get_imageid_df(IMAGEID_CSV)
     for image_id in imageid_df['ImageID'].dropna():
         print(f"\nProcessing image -- {image_id}")
@@ -187,3 +214,4 @@ if __name__ == "__main__":
             if not job_id:
                 raise RuntimeError(f"Inference response did not include a job ID: {job}")
             print(json.dumps(f"Inference Request JOBID = {job_id}", indent=2))
+    """
