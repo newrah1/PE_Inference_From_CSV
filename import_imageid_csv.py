@@ -425,3 +425,4 @@ class InferenceApp(tk.Tk):
 if __name__ == "__main__":
     app = InferenceApp()
     app.mainloop()
+# end
