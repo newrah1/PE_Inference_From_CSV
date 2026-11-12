@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/../PE_Images_DB/.idea/PE_Images_DB.iml" filepath="$PROJECT_DIR$/../PE_Images_DB/.idea/PE_Images_DB.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/PE_Inference_From_CSV.iml" filepath="$PROJECT_DIR$/.idea/PE_Inference_From_CSV.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../.idea/PythonProject.iml" filepath="$PROJECT_DIR$/../.idea/PythonProject.iml" />
+      <module fileurl="file://$USER_HOME$/OneDrive - Maxar Technologies Holdings Inc/NEWDE/Ontology-Taxonomy/military-platform-catalog-portable/.idea/military-platform-catalog-portable.iml" filepath="$USER_HOME$/OneDrive - Maxar Technologies Holdings Inc/NEWDE/Ontology-Taxonomy/military-platform-catalog-portable/.idea/military-platform-catalog-portable.iml" />
+    </modules>
+  </component>
+</project>
